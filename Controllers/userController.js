@@ -57,7 +57,7 @@ let userHome = async (req, res) => {
 let userSignup = async (req, res) => {
     try {
         let banner = await adminHelpers.getAllBanner();
-        res.render("user/userSignup", { banner });
+        res.render("User/userSignup", { banner });
     } catch (error) {
         console.log("Error: ", error);
         res.status(500).render("user/error", { message: "Something went wrong" });
@@ -68,7 +68,7 @@ let userSignup = async (req, res) => {
 let userSignupPost = (req, res) => {
     userHelpers.doSignup(req.body).then((response) => {
         if(response.status) {
-            res.status(200).render('user/userSignup',{ message : 'Email already exist'})
+            res.status(200).render('User/userSignup',{ message : 'Email already exist'})
         } else {
             res.redirect('/userlogin')
         }
@@ -83,7 +83,7 @@ let userLogin = async (req, res) => {
         res.redirect('/')
     } else {
         let banner = await adminHelpers.getAllBanner()
-        res.render('user/userLogin',{banner})
+        res.render('User/userLogin',{banner})
     }
 
 }
@@ -125,7 +125,7 @@ let singleProduct = async (req, res) => {
     let banner = await adminHelpers.getAllBanner()
     let products = await productHelpers.getAllProducts()
     await productHelpers.getProductDeatails(productId).then((response) => {
-        res.render("user/singleProductView", { response, logIn, userId, banner, cartCount, products })
+        res.render("User/singleProductView", { response, logIn, userId, banner, cartCount, products })
     })
     }catch(error){
         console.log("Error: ", error);
@@ -141,18 +141,18 @@ let cartView = async (req, res) => {
     let products = await userHelpers.getAllCartProducts(userId)
     if(!products){
         let errorMessage = "Your Cart Is Empty"
-    res.render('user/cartEmpty', { logIn, products, errorMessage})
+    res.render('User/cartEmpty', { logIn, products, errorMessage})
     return
     }
     let total =  await userHelpers.getTotalAmount(req.session.user._id)
     if(!total){
         let errorMessage = "Your Cart Is Empty"
-        res.render('user/cartEmpty', { logIn, products, errorMessage})
+        res.render('User/cartEmpty', { logIn, products, errorMessage})
         return
     }
     
     let banner = await adminHelpers.getAllBanner()
-    res.render('user/cart', { logIn, products, total, user:req.session.user._id, banner })
+    res.render('User/cart', { logIn, products, total, user:req.session.user._id, banner })
 }
 
 let addToCart = (req, res) => {
@@ -196,7 +196,7 @@ let placeCheckout = async (req, res) => {
     let logIn = req.session.user
     let address = await userHelpers.getAllAddress(req.session.user._id)
     let total = await userHelpers.getTotalAmount(req.session.user._id)
-    res.render('user/checkout', { total, logIn, address })
+    res.render('User/checkout', { total, logIn, address })
 }
 
 let placeCheckoutPost = async (req, res)=>{
@@ -238,7 +238,7 @@ let orderSucess = async(req, res)=>{
     let productDetails = await userHelpers.getOrderProduct(orderId)
     let banner = await adminHelpers.getAllBanner()
     //let totalPrice = await userHelpers.getTotalAmount(req.session.user._id)
-        res.render('user/orderSuccess',{logIn,orderDetails,productDetails,banner})
+        res.render('User/orderSuccess',{logIn,orderDetails,productDetails,banner})
      
 }
 
@@ -247,7 +247,7 @@ let myOrder = async(req, res)=>{
         let logIn = req.session.user
         let userId = req.session.user._id
         let orders = await userHelpers.getAllOrders(userId)
-            res.render('user/myOrder',{logIn, orders })
+            res.render('User/myOrder',{logIn, orders })
     }catch(error){
         let logIn = req.session.user
         console.log("Error: ", error);
@@ -271,7 +271,7 @@ let verifyPayment = (req, res)=>{
 
 let otpLogin = async (req, res)=>{
     let banner = await adminHelpers.getAllBanner()
-    res.render('user/otpLogin', { banner })
+    res.render('User/otpLogin', { banner })
 }
 let otpSignData
 let otpLoginPost = async (req, res)=>{
@@ -288,7 +288,7 @@ let otpLoginPost = async (req, res)=>{
 
 let otpConfirm = async (req, res)=>{
     let banner = await adminHelpers.getAllBanner()
-    res.render('user/otpLoginConfirm', { banner })
+    res.render('User/otpLoginConfirm', { banner })
 }
 
 let otpConfirmPost = (req, res) => {
@@ -310,7 +310,7 @@ let UserProfile = async (req, res) => {
         let logIn = req.session.user
         let address = await userHelpers.getAllAddress(req.session.user._id)
         let banner = await adminHelpers.getAllBanner()
-        res.render('user/userProfile', { banner, logIn, address })
+        res.render('User/userProfile', { banner, logIn, address })
     }catch(error){
          console.log("Error: ", error);
         res.status(500).render("user/error",{ message: "please login or signup"});
@@ -321,9 +321,8 @@ let UserProfile = async (req, res) => {
 
 let addAddress = async (req, res)=>{
     let logIn = req.session.user
-    console.log(logIn,'ggggggggggggggggg');
     let banner = await adminHelpers.getAllBanner()
-    res.render('user/addAddress', { banner,logIn })
+    res.render('User/addAddress', { banner,logIn })
 }
 
 let addAddressPost = (req, res)=>{
@@ -381,13 +380,13 @@ let applyCouponPost = async (req, res)=>{
 /* ---------------------------------------Forgot Password--------------------------------------------------*/
 let forgotPassword = async(req, res)=>{
     let banner = await adminHelpers.getAllBanner()
-    res.render('user/forgotpassword', { banner })
+    res.render('User/forgotpassword', { banner })
  }
 
 let forgotPasswordConfirm = async(req,res)=>{
     userNumber = req.session.userNumber
     let banner = await adminHelpers.getAllBanner()
-    res.render('user/forgotPasswordConfirm',{banner, userNumber})
+    res.render('User/forgotPasswordConfirm',{banner, userNumber})
 }
 
 let forgotPasswordPost = async (req, res)=>{
@@ -443,7 +442,7 @@ let shopProduct = async (req, res) => {
         wishCount = await userHelpers.getWishCount(req.session.user._id)
     }
     let wishProduct = await userHelpers.getAllWishlistProduct(req.session.user._id)
-    res.render('user/shopProduct', { logIn, products, cartCount, pageCount, count, wishCount, wishProduct })
+    res.render('User/shopProduct', { logIn, products, cartCount, pageCount, count, wishCount, wishProduct })
 }
 /* ---------------------------------------End Shop Product-----------------------------------------------------*/
 
@@ -458,7 +457,7 @@ let wishList = async(req,res)=>{
         wishCount = await userHelpers.getWishCount(req.session.user._id)
     }
 let wishProduct = await userHelpers.getAllWishlistProduct(userId)
-res.render('user/wishList',{logIn, wishProduct, user:req.session.user._id})
+res.render('User/wishList',{logIn, wishProduct, user:req.session.user._id})
 }
 
 let addTowishList = (req, res)=>{
@@ -479,7 +478,6 @@ let addToCartWish = (req, res) => {
     let userId = req.session.user._id
     let proId = req.params.id
     userHelpers.addToCartWish(proId).then(() => {
-        console.log('yyyyyyyyyyyyyyyyyyy');
         res.json({status:true})
     })
 }
