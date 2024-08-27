@@ -37,7 +37,7 @@ let userHome = async (req, res) => {
         const totalPages = Math.ceil(totalProducts / limit);
         let banner = await adminHelpers.getAllBanner();
 
-        res.render("user/home", {
+        res.render("User/home", {
             products,
             currentPage: page,
             totalPages,
