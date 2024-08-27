@@ -1,0 +1,98 @@
+ <section class="cart_area">
+        <div class="container" style="padding-top: 80px;">
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each wishProduct}}
+                            <tr>
+                                <td>
+                                    
+                                    <div class="media">
+                                        <div class="d-flex">
+                                            <img style="height: 80px; width: 80px;" src="/productImage/{{this.wishItems.image1}}" alt="">
+                                        </div>
+                                        <div class="media-body">
+                                            <p>{{this.wishItems.name}}</p>
+                                        </div>
+                                    </div>
+                                    
+                                </td>
+                                <td>
+                                    <h5>{{this.wishItems.offerprice}}</h5>                                    
+                                </td>
+                                
+                                <td>
+                                    {{!-- <button class="btn btn-primary" onclick="deleteCartProduct('{{this._id}}','{{this.product._id}}')">Add to Cart</button> --}}
+							        <button class="btn btn-primary" onclick="addToCart('{{this.wishItems._id}}')">Add to Cart</button>
+                                    <button class="btn btn-danger" onclick="deleteWishlistProduct('{{this._id}}','{{this.wishItems._id}}')">X</button>
+                                </td>
+                            </tr>
+                            {{/each}}
+                            
+                            
+                            <tr class="out_button_area">
+                                <td>
+
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+
+                                </td>
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function deleteWishlistProduct(wishId,productId){
+    $.ajax({
+        url:'/deletewishproduct/',
+        data: {
+            wishList: wishId,
+            product: productId
+        },
+        method:'post',
+        success:(response)=>{
+            alert("Product Removed ")
+
+            location.reload()
+            
+        }
+    })
+}
+    </script>
+
+    <script>
+       function addToCart(productId){
+    $.ajax({
+        url:'/addtocart/'+productId,
+        method:'get',
+        success:(response)=>{
+            
+            if(response.status){
+                
+                let count = $('#cartCount').html()
+                count = parseInt(count)+1
+                $('#cartCount').html(count)
+            }
+            swal("Product Added!", "!", "success");
+        }
+    })
+}
+    </script>
+
+    

@@ -1,0 +1,151 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css"></script>
+<script src="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+
+<div class="clearfix"></div>
+
+<div class="content-wrapper">
+  <div class="container-fluid">
+    <div class="row ">
+      <!--  modal  -->
+      <button type="submit" class="btn btn-primary ml-auto mr-5" data-toggle="modal" data-target="#exampleModal"
+        data-whatever="@getbootstrap">Add Coupon</button>
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="background-color:rgb(46, 46, 102);">
+              <form action="/admin/addcoupon" method="post">
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label text-dark">Coupon Name</label>
+                  <input type="text" name="couponName" class="form-control border border-dark" id="contactName"
+                    required>
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label text-dark">Coupon Code</label>
+                  <input type="text" name="couponcode" class="form-control border border-dark" id="recipient-name"
+                    required>
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label text-dark">Minimum Amount</label>
+                  <input type="number" name="minimumAmount" class="form-control border border-dark" id="recipient-name"
+                    required>
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label text-dark">Maximum Amount</label>
+                  <input type="number" name="maximumAmount" class="form-control border border-dark" id="recipient-name"
+                    required>
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label text-dark">Expire Date</label>
+                  <input type="date" name="expireDate" class="form-control border border-dark" id="recipient-name"
+                    required>
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label text-dark">Coupon Percentage</label>
+                  <input type="number" name="couponPercentage" class="form-control border border-dark" id="percentage"
+                    onkeyup="validatePercentage()">
+                  <span id="submit-error" class="text-danger"></span>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" id="percentagesubmit" class="btn btn-primary"
+                    onclick="return validateForm()">Add Coupon</button>
+                </div>
+
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <!-- End modal  -->
+      <div class="col-md-12 p-3">
+        <div class="card ">
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <div class="table-responsive">
+              <table id="dtBasicExample" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th class="th-sm">No
+                    </th>
+                    <th class="th-sm">Coupon Name
+                    </th>
+                    <th class="th-sm">Coupon Code
+                    </th>
+                    <th class="th-sm">Minimum Amount
+                    </th>
+                    <th class="th-sm">Maximum Amount
+                    </th>
+                    <th class="th-sm">Expire Date
+                    </th>
+                    <th class="th-sm">Coupon Percentage
+                    </th>
+                    <th class="th-sm">Activities
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each coupon}}
+                  <tr>
+                    <th scope="row">{{math @index "+"1}}</th>
+                    <td>{{this.couponName}}</td>
+                    <td>{{this.couponcode}}</td>
+                    <td>{{this.minimumAmount}}</td>
+                    <td>{{this.maximumAmount}}</td>
+                    <td>{{this.expireDate}}</td>
+                    <td>{{this.couponPercentage}}</td>
+                    <td>
+                      <a href="/admin/editCoupon?id={{this._id}}" class="btn btn-primary">Edit</a>
+                      <a href="/admin/deleteCoupon?id={{this._id}}" class="btn btn-danger">Delete</a>
+                    </td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!--start overlay-->
+      <div class="overlay toggle-menu"></div>
+      <!--end overlay-->
+
+    </div>
+    <!-- End container-fluid-->
+
+  </div><!--End content-wrapper-->
+  <!--Start Back To Top Button-->
+  <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
+  <!--End Back To Top Button-->
+  <script>
+    $(document).ready(function () {
+      $('#dtBasicExample').DataTable();
+      $('.dataTables_length').addClass('bs-select');
+    });
+  </script>
+
+  <script>
+    function validatePercentage() {
+      let percentage = document.getElementById('percentage').value
+      if (percentage > 80) {
+        document.getElementById('submit-error').innerHTML = "Percentage cannot exceed 80%";
+        document.querySelector('#percentagesubmit').disabled = true;
+      } else {
+        document.getElementById('submit-error').innerHTML = "";
+        document.querySelector('#percentagesubmit').disabled = false;
+      }
+    }
+  </script>
